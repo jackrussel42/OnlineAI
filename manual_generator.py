@@ -1,15 +1,19 @@
 import streamlit as st
-from openai import OpenAI
+import google.generativeai as genai # This is the new import
 import os
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Initialize the OpenAI client with your API key from environment variables
-# Ensure your API key is named OPENAI_API_KEY in your .env file
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Initialize the Google Generative AI client with your API key from environment variables
+# Ensure your API key is named GOOGLE_API_KEY in your .env file
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
+# Create the model instance
+# You might choose a specific model like 'gemini-pro' or 'gemini-1.5-pro'
+# Check Google's API documentation for available models.
+model = genai.GenerativeModel('gemini-pro')
 # --- Streamlit App Configuration ---
 st.set_page_config(
     page_title="KI-Handbuch-Generator",
