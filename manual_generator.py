@@ -54,16 +54,15 @@ if st.button("Abschnitt generieren"):
 
         try:
             with st.spinner("Generiere Abschnitt... Dies kann einen Moment dauern."):
-                response = client.chat.completions.create(
-                    model="gpt-4o-mini", # Or "gpt-3.5-turbo", "gpt-4" depending on your access and needs
-                    messages=[
-                        {"role": "system", "content": "Du bist ein erfahrener technischer Redakteur und hilfst dabei, klare und prägnante Bedienungsanleitungen zu erstellen."},
-                        {"role": "user", "content": prompt_text}
-                    ],
-                    max_tokens=800, # Limit the length of the response
-                    temperature=0.7 # Controls creativity. Lower means more predictable.
+                response = model.generate_content(
+                    [{"role": "system", "parts": ["Du bist ein erfahrener technischer Redakteur und hilfst dabei, klare und prägnante Bedienungsanleitungen zu erstellen."]},
+                     {"role": "user", "parts": [prompt_text]}],
+                    generation_config=genai.types.GenerationConfig(
+                        max_output_tokens=800, # Limit the length of the response
+                        temperature=0.7 # Controls creativity. Lower means more predictable.
+                    )
                 )
-            generated_text = response.choices[0].message.content
+            generated_text = response.text # Google Gemini response access
 
             st.subheader("Generierter Abschnitt:")
             st.markdown(generated_text) # Use markdown to render formatted text
