@@ -22,36 +22,10 @@ if not api_key_loaded:
 else:
     genai.configure(api_key=api_key_loaded)
 
-# --- TEMPORARY DEBUGGING: List available models ---
-# This section will list the models available to your API key.
-# After you get the correct model name, you will REPLACE this section
-# with the actual model initialization.
-st.subheader("Verfügbare Gemini Modelle für Ihr Projekt:")
+# --- Initialize the Google Generative AI Model ---
+# Based on the list, 'models/gemini-1.5-flash-latest' is a good choice for general text generation.
 try:
-    found_gemini_pro_like_model = False
-    for m in genai.list_models():
-        # Only show models that support text generation via generateContent
-        if 'generateContent' in m.supported_generation_methods:
-            st.write(f"- `{m.name}` (Unterstützt: {m.supported_generation_methods})")
-            if 'gemini-pro' in m.name or 'gemini-1.0-pro' in m.name:
-                found_gemini_pro_like_model = True
-    if not found_gemini_pro_like_model:
-        st.warning("Kein 'gemini-pro' oder 'gemini-1.0-pro' Modell gefunden, das 'generateContent' unterstützt. Bitte überprüfen Sie Ihre Google Cloud Projektkonfiguration und API-Berechtigungen.")
-except Exception as e:
-    st.error(f"Fehler beim Auflisten der Modelle: {e}")
-    st.info("Bitte stellen Sie sicher, dass die 'Generative Language API' in Ihrem Google Cloud Projekt aktiviert ist und das Abrechnungskonto verbunden ist.")
-
-st.markdown("---") # Separator for clarity
-
-# --- ORIGINAL APP CONTINUES BELOW ---
-# IMPORTANT: After you get the correct model name from the list above,
-# you will REMOVE the "TEMPORARY DEBUGGING" section (lines 20-35)
-# and UNCOMMENT/CORRECT the line below with the exact model name you found.
-# Example: model = genai.GenerativeModel('models/gemini-1.0-pro')
-try:
-    # Initialize the model that you found in the list above.
-    # For now, we'll keep 'gemini-pro' as a placeholder, but you'll replace it.
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('models/gemini-1.5-flash-latest') # <--- CORRECTED MODEL NAME HERE
 except Exception as e:
     st.error(f"Fehler beim Initialisieren des Gemini-Modells: {e}")
     st.info("Bitte überprüfen Sie den Modellnamen und die Verfügbarkeit in Ihrem Google Cloud Projekt.")
@@ -71,7 +45,6 @@ if st.button("Abschnitt generieren"):
     if not product_name or not topic_name:
         st.warning("Bitte gib den Produktnamen und das Thema des Abschnitts ein, um fortzufahren.")
     else:
-        # Construct the prompt for the AI
         prompt_text = f"""
         Erstelle einen Abschnitt für eine Bedienungsanleitung.
 
