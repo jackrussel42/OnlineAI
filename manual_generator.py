@@ -6,6 +6,16 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
+# DEBUG: Check if API key is loaded
+api_key_loaded = os.getenv("GOOGLE_API_KEY")
+if not api_key_loaded:
+    st.error("Fehler: Google API-Schlüssel nicht geladen. Bitte prüfen Sie die Secrets in Streamlit Cloud.")
+    print("DEBUG: GOOGLE_API_KEY not loaded from environment.") # DEBUG
+else:
+    print("DEBUG: GOOGLE_API_KEY successfully loaded.") # DEBUG
+
+genai.configure(api_key=api_key_loaded) # Use the loaded key
+
 # Initialize the Google Generative AI client with your API key from environment variables
 # Ensure your API key is named GOOGLE_API_KEY in your .env file
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
