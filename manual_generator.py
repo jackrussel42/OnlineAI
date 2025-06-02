@@ -25,7 +25,7 @@ else:
 # --- Initialize the Google Generative AI Model ---
 # Based on the list, 'models/gemini-1.5-flash-latest' is a good choice for general text generation.
 try:
-    model = genai.GenerativeModel('models/gemini-1.5-flash-latest') # <--- CORRECTED MODEL NAME HERE
+    model = genai.GenerativeModel('models/gemini-1.5-flash-latest')
 except Exception as e:
     st.error(f"Fehler beim Initialisieren des Gemini-Modells: {e}")
     st.info("Bitte überprüfen Sie den Modellnamen und die Verfügbarkeit in Ihrem Google Cloud Projekt.")
@@ -45,7 +45,13 @@ if st.button("Abschnitt generieren"):
     if not product_name or not topic_name:
         st.warning("Bitte gib den Produktnamen und das Thema des Abschnitts ein, um fortzufahren.")
     else:
+        # Define the system instruction as part of the initial prompt
+        system_instruction = "Du bist ein erfahrener technischer Redakteur und hilfst dabei, klare und prägnante Bedienungsanleitungen zu erstellen."
+
+        # Construct the user prompt including the system instruction
         prompt_text = f"""
+        {system_instruction}
+
         Erstelle einen Abschnitt für eine Bedienungsanleitung.
 
         Produkt: {product_name}
@@ -64,8 +70,7 @@ if st.button("Abschnitt generieren"):
         try:
             with st.spinner("Generiere Abschnitt... Dies kann einen Moment dauern."):
                 response = model.generate_content(
-                    [{"role": "system", "parts": ["Du bist ein erfahrener technischer Redakteur und hilfst dabei, klare und prägnante Bedienungsanleitungen zu erstellen."]},
-                     {"role": "user", "parts": [prompt_text]}],
+                    [{"role": "user", "parts": [prompt_text]}], # <--- CHANGED: Removed system role, integrated into user prompt
                     generation_config=genai.types.GenerationConfig(
                         max_output_tokens=800, # Limit the length of the response
                         temperature=0.7 # Controls creativity. Lower means more predictable.
